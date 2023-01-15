@@ -31,6 +31,9 @@ Route::middleware([
     //admin
     Route::get('dashboard',[ProfileController::class,'index'])->name('dashboard');
 
+    //admin Update
+    Route::post('admin/update',[ProfileController::class,'Accupdate'])->name('admin#update');
+
     //adminList
     Route::get('admin/list',[ListController::class,'index'])->name('admin#list');
     // category
