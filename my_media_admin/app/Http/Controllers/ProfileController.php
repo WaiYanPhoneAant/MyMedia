@@ -4,7 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Validator;
+
+
 
 class ProfileController extends Controller
 {
@@ -14,8 +18,9 @@ class ProfileController extends Controller
     }
     public function Accupdate(Request $request){
         $data=$this->UpdateData($request);
+        $this->AdminDataValidator($data);
         User::where('id',Auth::user()->id)->update($data);
-        return back();
+        return back()->with(['success'=>'Update Success']);
     }
 
 
@@ -23,12 +28,19 @@ class ProfileController extends Controller
     {
         # code...
         return [
-            'name'=>$request->name,
-            'email'=>$request->email,
-            'phone'=>$request->phone,
-            'gender'=>$request->gender,
-            'address'=>$request->address,
+            'name'=>$request->adminName,
+            'email'=>$request->adminEmail,
+            'phone'=>$request->adminPhone,
+            'gender'=>$request->adminGender,
+            'address'=>$request->adminAddress,
 
         ];
+    }
+    private function AdminDataValidator($request){
+
+        return Validator::make($request,[
+            'name'=>'required',
+            'email' => 'required|unique:users,email,'.Auth::user()->id
+        ])->validate();
     }
 }
